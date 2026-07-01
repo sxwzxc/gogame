@@ -27,9 +27,9 @@ function publicRoom(room) {
   }
 }
 
-export async function onRequestGet({ params, request }) {
-  const code = String(params.code || "").trim().toUpperCase()
-  const url = new URL(request.url)
+export async function onRequestGet(context) {
+  const code = String(context.params.code || "").trim().toUpperCase()
+  const url = new URL(context.request.url)
   const since = Number(url.searchParams.get("since") || "0") || 0
 
   const store = getStore("pool")
@@ -57,11 +57,11 @@ export async function onRequestGet({ params, request }) {
   )
 }
 
-export async function onRequestPost({ params, request }) {
-  const code = String(params.code || "").trim().toUpperCase()
+export async function onRequestPost(context) {
+  const code = String(context.params.code || "").trim().toUpperCase()
   let body = {}
   try {
-    body = await request.json()
+    body = await context.request.json()
   } catch {
     body = {}
   }

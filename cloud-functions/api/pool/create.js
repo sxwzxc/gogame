@@ -25,7 +25,7 @@ const cors = {
   "Content-Type": "application/json",
 }
 
-export async function onRequestPost({ request }) {
+export async function onRequestPost(context) {
   const store = getStore("pool")
 
   // Find a free room code (retry on collision).

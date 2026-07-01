@@ -12,10 +12,10 @@ const cors = {
   "Content-Type": "application/json",
 }
 
-export async function onRequestPost({ request }) {
+export async function onRequestPost(context) {
   let body = {}
   try {
-    body = await request.json()
+    body = await context.request.json()
   } catch {
     // empty body is fine
   }
