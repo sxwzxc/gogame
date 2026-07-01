@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Go + EdgeOne Pages",
-  description: "Go Functions allow you to run Go code on EdgeOne Pages using file-based routing. Each .go file in cloud-functions/ maps to an HTTP endpoint automatically.",
+  title: "台球大师 · Pool Master",
+  description: "一个基于 HTML5 Canvas 的 8 球台球小游戏，支持双人对战、真实物理碰撞与完整 8 球规则。",
 };
 
 export default function RootLayout({
