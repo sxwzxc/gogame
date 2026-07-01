@@ -1,0 +1,432 @@
+@import "tailwindcss";
+
+/* ============================================
+   EdgeOne Pages Template Design System
+   Framework: Go Handler
+   Theme: Go Cyan/Blue - Clean & Engineering
+   ============================================ */
+
+:root {
+  /* Base Colors */
+  --background: #000000;
+  --foreground: #ffffff;
+  
+  /* Framework Brand Colors - Go */
+  --brand-primary: #00ADD8;
+  --brand-secondary: #007D9C;
+  --brand-accent: #5DC9E2;
+  --brand-primary-rgb: 0, 173, 216;
+  --brand-secondary-rgb: 0, 125, 156;
+  --brand-accent-rgb: 93, 201, 226;
+  
+  /* UI Colors */
+  --card: #0a0a0a;
+  --card-foreground: #ffffff;
+  --popover: #111111;
+  --popover-foreground: #ffffff;
+  --primary: #1c66e5;
+  --primary-foreground: #ffffff;
+  --secondary: #1a1a1a;
+  --secondary-foreground: #ffffff;
+  --muted: #1a1a1a;
+  --muted-foreground: #a1a1aa;
+  --accent: #1a1a1a;
+  --accent-foreground: #ffffff;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #1f1f1f;
+  --input: #1f1f1f;
+  --ring: var(--brand-primary);
+  
+  /* Glassmorphism */
+  --glass-bg: rgba(0, 173, 216, 0.05);
+  --glass-border: rgba(0, 173, 216, 0.15);
+  --glass-blur: 12px;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  overflow-x: hidden;
+}
+
+/* ============================================
+   Grid Background Pattern - Go Engineering Style
+   ============================================ */
+
+.grid-background {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(var(--brand-primary-rgb), 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--brand-primary-rgb), 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ============================================
+   Gradient Orbs - Go Cyan Theme
+   ============================================ */
+
+.gradient-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.4;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.gradient-orb-primary {
+  background: radial-gradient(circle, rgba(var(--brand-primary-rgb), 0.5) 0%, transparent 70%);
+}
+
+.gradient-orb-secondary {
+  background: radial-gradient(circle, rgba(var(--brand-secondary-rgb), 0.4) 0%, transparent 70%);
+}
+
+/* ============================================
+   Glassmorphism Card - Go Clean Style
+   ============================================ */
+
+.glass-card {
+  background: linear-gradient(135deg, rgba(17, 17, 17, 0.9) 0%, rgba(0, 173, 216, 0.05) 100%);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid rgba(var(--brand-primary-rgb), 0.12);
+  transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+  border-color: rgba(var(--brand-primary-rgb), 0.3);
+  box-shadow: 0 0 30px rgba(var(--brand-primary-rgb), 0.1);
+}
+
+/* ============================================
+   Feature Card with Sharp Lines
+   ============================================ */
+
+.feature-card {
+  position: relative;
+  background: linear-gradient(135deg, rgba(17, 17, 17, 0.95) 0%, rgba(0, 173, 216, 0.05) 100%);
+  border: 1px solid rgba(var(--brand-primary-rgb), 0.1);
+  border-radius: 8px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 0;
+  background: var(--brand-primary);
+  transition: height 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(var(--brand-primary-rgb), 0.25);
+  box-shadow: 0 10px 40px rgba(var(--brand-primary-rgb), 0.15);
+}
+
+.feature-card:hover::before {
+  height: 100%;
+}
+
+/* ============================================
+   Code Block - Go Dark Theme
+   ============================================ */
+
+.code-block {
+  background: linear-gradient(180deg, #0d1117 0%, rgba(0, 173, 216, 0.08) 100%);
+  border: 1px solid rgba(var(--brand-primary-rgb), 0.15);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.code-block-header {
+  background: rgba(var(--brand-primary-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--brand-primary-rgb), 0.15);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.code-block pre {
+  margin: 0;
+  padding: 16px;
+  overflow-x: auto;
+}
+
+/* File tree style */
+.file-tree {
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.file-tree .folder {
+  color: var(--brand-primary);
+}
+
+.file-tree .file {
+  color: #a1a1aa;
+}
+
+.file-tree .arrow {
+  color: var(--brand-accent);
+}
+
+/* ============================================
+   Go Handler Badge
+   ============================================ */
+
+.framework-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  background: linear-gradient(135deg, 
+    rgba(var(--brand-primary-rgb), 0.2) 0%, 
+    rgba(var(--brand-secondary-rgb), 0.15) 100%);
+  border: 1px solid rgba(var(--brand-primary-rgb), 0.3);
+}
+
+/* ============================================
+   Button Styles - Go Theme
+   ============================================ */
+
+.btn-primary {
+  background: linear-gradient(135deg, #1c66e5 0%, #1d4ed8 100%);
+  color: white;
+  border: none;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(28, 102, 229, 0.3);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid rgba(var(--brand-primary-rgb), 0.3);
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.btn-outline:hover {
+  border-color: var(--brand-primary);
+  background: rgba(var(--brand-primary-rgb), 0.1);
+}
+
+/* ============================================
+   Header/Footer Borders - Go Cyan
+   ============================================ */
+
+.header-border {
+  position: relative;
+}
+
+.header-border::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(var(--brand-primary-rgb), 0.4) 50%, 
+    transparent 100%);
+}
+
+.footer-border {
+  position: relative;
+}
+
+.footer-border::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(var(--brand-primary-rgb), 0.4) 50%, 
+    transparent 100%);
+}
+
+/* ============================================
+   Route Card Styles
+   ============================================ */
+
+.route-card {
+  background: rgba(17, 17, 17, 0.8);
+  border: 1px solid rgba(var(--brand-primary-rgb), 0.1);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.route-card:hover {
+  border-color: rgba(var(--brand-primary-rgb), 0.25);
+  background: rgba(0, 173, 216, 0.05);
+}
+
+.method-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(var(--brand-primary-rgb), 0.15);
+  color: var(--brand-primary);
+}
+
+/* ============================================
+   Animations
+   ============================================ */
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 4s ease-in-out infinite;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out forwards;
+}
+
+.animation-delay-100 { animation-delay: 100ms; }
+.animation-delay-200 { animation-delay: 200ms; }
+.animation-delay-300 { animation-delay: 300ms; }
+.animation-delay-400 { animation-delay: 400ms; }
+
+/* ============================================
+   API Response
+   ============================================ */
+
+.api-response {
+  background: linear-gradient(135deg, #0d1117 0%, rgba(0, 173, 216, 0.05) 100%);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  border-radius: 6px;
+}
+
+.api-response pre {
+  color: #22c55e;
+}
+
+/* ============================================
+   Icon Glow Effect
+   ============================================ */
+
+.icon-glow {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-glow::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(var(--brand-primary-rgb), 0.3) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.icon-glow:hover::after {
+  opacity: 1;
+}
+
+/* ============================================
+   Category Section
+   ============================================ */
+
+.category-header {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(var(--brand-primary-rgb), 0.15);
+  margin-bottom: 12px;
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+
+@media (max-width: 768px) {
+  .gradient-orb {
+    filter: blur(80px);
+    opacity: 0.25;
+  }
+  
+  .feature-card:hover {
+    transform: none;
+  }
+  
+  .grid-background {
+    background-size: 30px 30px;
+  }
+}
