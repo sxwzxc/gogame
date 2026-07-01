@@ -295,6 +295,12 @@ export default function Home() {
   const onlineRef = useRef<OnlineInfo | null>(null)
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const submittingRef = useRef(false)
+  // Mirrors of state used inside the rAF loop / setInterval(doPoll), which
+  // capture closures at setup time. Without these refs the loop/interval would
+  // read stale values (e.g. screen staying "lobby" forever, breaking the
+  // host-waiting -> game transition and opponent-left detection).
+  const screenRef = useRef<Screen>("lobby")
+  const canInteractRef = useRef(false)
 
   const [mode, setMode] = useState<Mode>("menu")
   const [screen, setScreen] = useState<Screen>("lobby")
@@ -375,13 +381,18 @@ export default function Home() {
     try {
       const resp = await pollState(info.code, lastSeqRef.current)
       setRoomStatus(resp.room)
+      // Read screen from the ref: doPoll is captured once by setInterval, so
+      // the closed-over `screen` state would otherwise be stuck at the value
+      // from the render that started polling (e.g. "lobby"), which broke both
+      // the host-waiting -> game transition and opponent-left detection.
+      const sc = screenRef.current
       if (resp.room.status === "ended" ||
-          (screen === "game" && !resp.room.hostPresent) ||
-          (screen === "game" && !resp.room.guestPresent)) {
+          (sc === "game" && !resp.room.hostPresent) ||
+          (sc === "game" && !resp.room.guestPresent)) {
         setOpponentLeft(true)
       }
       // Host transitions from waiting to game once the guest joins.
-      if (info.role === 1 && screen === "hostwait" && resp.room.guestPresent) {
+      if (info.role === 1 && sc === "hostwait" && resp.room.guestPresent) {
         setScreen("game")
       }
       for (const op of resp.ops) {
@@ -501,6 +512,13 @@ export default function Home() {
   const canInteract =
     (isLocal || (isOnline && screen === "game")) &&
     myTurn && playing && !opponentLeft && !submittingRef.current
+  // True only while the <canvas> is actually mounted (the game screen). The
+  // main rAF effect depends on this so it (re)starts exactly when the canvas
+  // appears, instead of running once at menu mount when canvasRef is null.
+  const canvasMounted = isLocal || (isOnline && screen === "game")
+  // Keep refs in sync for the closures captured by setInterval / rAF.
+  screenRef.current = screen
+  canInteractRef.current = canInteract
 
   const tryPlaceCue = (x: number, y: number) => {
     const g = gameRef.current
@@ -597,7 +615,10 @@ export default function Home() {
     syncUI()
   }
 
-  // Main loop: physics + render. Set up once.
+  // Main loop: physics + render. Re-runs whenever the canvas actually mounts
+  // (canvasMounted). Previously this had `[]` deps, so on first render (menu,
+  // no <canvas>) canvasRef was null and the effect bailed out forever — leaving
+  // a blank canvas once the user navigated to the game screen.
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
@@ -641,7 +662,7 @@ export default function Home() {
         render(ctx, g, {
           aiming: aimingRef.current,
           mouse: mouseRef.current,
-          canPlace: canInteract,
+          canPlace: canInteractRef.current,
         })
       }
       raf = requestAnimationFrame(loop)
@@ -649,7 +670,7 @@ export default function Home() {
     raf = requestAnimationFrame(loop)
     return () => cancelAnimationFrame(raf)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [canvasMounted])
 
   // Cleanup online on unmount.
   useEffect(() => {
@@ -658,6 +679,18 @@ export default function Home() {
       const info = onlineRef.current
       if (info) leaveRoom(info.code, info.token)
     }
+  }, [])
+
+  // Also notify the server when the tab is closed / navigated away — React's
+  // unmount cleanup is not guaranteed to run on pagehide, so we listen for it
+  // explicitly. leaveRoom uses keepalive so the request survives the unload.
+  useEffect(() => {
+    const onUnload = () => {
+      const info = onlineRef.current
+      if (info) leaveRoom(info.code, info.token)
+    }
+    window.addEventListener("pagehide", onUnload)
+    return () => window.removeEventListener("pagehide", onUnload)
   }, [])
 
   const groupLabel = (grp: Group) =>

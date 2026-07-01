@@ -97,9 +97,13 @@ export function submitOp(
 
 export async function leaveRoom(code: string, token: string): Promise<void> {
   try {
-    await jpost(`${API_BASE}/api/pool/room/${encodeURIComponent(code)}`, {
-      token,
-      action: "leave",
+    // keepalive so the request still completes if the tab is closing
+    // (pagehide / unload) — otherwise the opponent would never be notified.
+    await fetch(`${API_BASE}/api/pool/room/${encodeURIComponent(code)}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token, action: "leave" }),
+      keepalive: true,
     })
   } catch {
     // Best-effort: ignore errors when leaving.
